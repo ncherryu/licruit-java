@@ -1,5 +1,7 @@
 package com.example.licruitbackendjava.controller;
 
+import com.example.licruitbackendjava.dto.user.LoginRequest;
+import com.example.licruitbackendjava.dto.user.LoginResponse;
 import com.example.licruitbackendjava.dto.user.RegisterRequest;
 import com.example.licruitbackendjava.response.SuccessResponse;
 import com.example.licruitbackendjava.service.UserService;
@@ -22,5 +24,11 @@ public class UserController {
     public ResponseEntity<SuccessResponse> addUser(@RequestBody @Valid RegisterRequest registerRequest) {
         userService.createUser(registerRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(new SuccessResponse());
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponse> login(@RequestBody @Valid LoginRequest loginRequest) {
+        LoginResponse loginResponse = userService.login(loginRequest);
+        return ResponseEntity.status(HttpStatus.OK).body(loginResponse);
     }
 }
