@@ -1,11 +1,9 @@
 package com.example.licruitbackendjava.controller;
 
-import com.example.licruitbackendjava.dto.user.CompanyNumberRequest;
-import com.example.licruitbackendjava.dto.user.LoginRequest;
-import com.example.licruitbackendjava.dto.user.LoginResponse;
-import com.example.licruitbackendjava.dto.user.RegisterRequest;
-import com.example.licruitbackendjava.exception.token.MissingRefreshHeader;
+import com.example.licruitbackendjava.dto.user.*;
+import com.example.licruitbackendjava.exception.token.MissingRefreshHeaderException;
 import com.example.licruitbackendjava.response.SuccessResponse;
+import com.example.licruitbackendjava.service.TokenService;
 import com.example.licruitbackendjava.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -13,14 +11,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
-
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor
 public class UserController {
 
     private final UserService userService;
+    private final TokenService tokenService;
 
     @PostMapping("/register")
     public ResponseEntity<SuccessResponse> addUser(@RequestBody @Valid RegisterRequest registerRequest) {
@@ -41,16 +38,13 @@ public class UserController {
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<SuccessResponse> getNewAccessToken(
+    public ResponseEntity<AccessTokenResponse> getNewAccessToken(
             @RequestHeader(value = "refresh", required = false, defaultValue = "")
             String refreshToken
     ) {
         if(refreshToken.isEmpty()) {
-            throw new MissingRefreshHeader();
+            throw new MissingRefreshHeaderException();
         }
-
-        // 액세스 토큰 재발급
-
-        return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse());
+        return ResponseEntity.status(HttpStatus.OK).body(tokenService.createNewAccessToken(refreshToken));
     }
 }

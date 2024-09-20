@@ -2,11 +2,10 @@ package com.example.licruitbackendjava.auth;
 
 import com.example.licruitbackendjava.auth.dto.TokenDTO;
 import com.example.licruitbackendjava.entity.UserEntity;
-import io.jsonwebtoken.JwtParser;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SecurityException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -69,5 +68,19 @@ public class TokenProvider {
                 .accessToken(createAccessToken(userEntity))
                 .refreshToken(createRefreshToken(userEntity))
                 .build();
+    }
+
+    public Claims getClaims(String token) {
+        try {
+            return jwtParser.parseClaimsJws(token).getBody();
+        } catch(SecurityException | MalformedJwtException | ExpiredJwtException | UnsupportedJwtException | IllegalArgumentException ex) {
+            throw new JwtException("유효하지 않은 토큰입니다.");
+        } catch(JwtException ex) {
+            throw new JwtException(ex.getMessage());
+        }
+    }
+
+    public String getCompanyNumberFromToken(String token) {
+        return (String) getClaims(token).get("companyNumber");
     }
 }
