@@ -13,7 +13,7 @@ public class SectorEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    private int id;
+    private int sectorId;
 
     @Column(name = "name", nullable = false)
     private String name;

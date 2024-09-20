@@ -1,18 +1,23 @@
 package com.example.licruitbackendjava.entity;
 
-import com.example.licruitbackendjava.dto.user.RegisterRequest;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Setter
 @Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "users")
 public class UserEntity {
 
     @Id
-    @Column(name = "company_number", length = 10)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private int userId;
+
+    @Column(name = "company_number", unique = true, length = 10)
     private String companyNumber;
 
     @Column(name = "password", nullable = false)
@@ -27,27 +32,13 @@ public class UserEntity {
     @Column(name = "address", nullable = false)
     private String address;
 
-    @Column(name = "sector_id", nullable = false)
-    private int sectorId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "sectorId")
+    private SectorEntity sector;
 
     @Column(name = "img", nullable = true)
     private String img;
 
     @Column(name = "is_marketing", nullable = false)
     private Boolean isMarketing;
-
-    public static UserEntity toUserEntity(RegisterRequest registerRequest) {
-        UserEntity userEntity = new UserEntity();
-
-        userEntity.setCompanyNumber(registerRequest.getCompanyNumber());
-        userEntity.setPassword(registerRequest.getPassword());
-        userEntity.setBusinessName(registerRequest.getBusinessName());
-        userEntity.setContact(registerRequest.getContact());
-        userEntity.setAddress(registerRequest.getAddress());
-        userEntity.setSectorId(registerRequest.getSectorId());
-        userEntity.setImg(null);
-        userEntity.setIsMarketing(registerRequest.getIsMarketing());
-
-        return userEntity;
-    }
 }

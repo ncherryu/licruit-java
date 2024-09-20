@@ -1,5 +1,6 @@
 package com.example.licruitbackendjava.exception;
 
+import com.example.licruitbackendjava.exception.sector.NotExistSectorException;
 import com.example.licruitbackendjava.exception.user.IncorrectPasswordException;
 import com.example.licruitbackendjava.response.ErrorResponse;
 import org.springframework.dao.DuplicateKeyException;
@@ -42,5 +43,11 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleRouterNotFoundException(HttpRequestMethodNotSupportedException ex) {
         ErrorResponse errorResponse = new ErrorResponse(ex.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
+
+    @ExceptionHandler(NotExistSectorException.class)
+    public ResponseEntity<ErrorResponse> handleNotExistSectorException(NotExistSectorException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
 }
