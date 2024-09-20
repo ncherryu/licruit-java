@@ -1,6 +1,7 @@
 package com.example.licruitbackendjava.exception;
 
 import com.example.licruitbackendjava.exception.sector.NotExistSectorException;
+import com.example.licruitbackendjava.exception.token.MissingRefreshHeader;
 import com.example.licruitbackendjava.exception.user.IncorrectPasswordException;
 import com.example.licruitbackendjava.response.ErrorResponse;
 import org.springframework.dao.DuplicateKeyException;
@@ -9,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -49,5 +51,11 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleNotExistSectorException(NotExistSectorException ex) {
         ErrorResponse errorResponse = new ErrorResponse(ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+    }
+
+    @ExceptionHandler(MissingRefreshHeader.class)
+    public ResponseEntity<ErrorResponse> handleMissingRefreshHeader(MissingRefreshHeader ex) {
+        ErrorResponse errorResponse = new ErrorResponse(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
     }
 }

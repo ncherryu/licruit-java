@@ -22,7 +22,7 @@ public class SecurityConfig {
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((authorizeRequests) ->
                         authorizeRequests
-                                .requestMatchers("/users/register", "/users/login", "/users/company-number")
+                                .requestMatchers("/users/register", "/users/login", "/users/company-number", "/users/refresh")
                                 .permitAll()
                 );
 
