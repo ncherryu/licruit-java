@@ -1,5 +1,6 @@
 package com.example.licruitbackendjava.controller;
 
+import com.example.licruitbackendjava.dto.user.CompanyNumberRequest;
 import com.example.licruitbackendjava.dto.user.LoginRequest;
 import com.example.licruitbackendjava.dto.user.LoginResponse;
 import com.example.licruitbackendjava.dto.user.RegisterRequest;
@@ -30,5 +31,11 @@ public class UserController {
     public ResponseEntity<LoginResponse> login(@RequestBody @Valid LoginRequest loginRequest) {
         LoginResponse loginResponse = userService.login(loginRequest);
         return ResponseEntity.status(HttpStatus.OK).body(loginResponse);
+    }
+
+    @PostMapping("/company-number")
+    public ResponseEntity<SuccessResponse> checkCompanyNumberDuplication(@RequestBody @Valid CompanyNumberRequest companyNumberRequest) {
+        userService.checkCompanyNumberDuplicate(companyNumberRequest.getCompanyNumber());
+        return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse());
     }
 }
